@@ -1,6 +1,10 @@
 import { commands, Position, Range, TextEdit, TextEditor, Uri, window, workspace, WorkspaceEdit } from 'vscode';
 import { findMatchIndexes } from './helpers/findMatches';
 
+
+export const state: { generateTypeInfos: GenerateTypeInfo[] } = {
+  generateTypeInfos: [],
+}
 export interface GenerateTypeInfo {
   typescriptHoverResult: string;
   typePosition: Position;
@@ -43,7 +47,9 @@ const generateType = async (
 };
 
 export const commandId = 'extension.generateExplicitType';
-export const commandHandler = async (generateTypeInfos: GenerateTypeInfo[], autoImport = false) => {
+export const commandHandler = async (generateTypeInfos: GenerateTypeInfo[], autoImport = false, ...other: any[]) => {
+  if (!generateTypeInfos) generateTypeInfos = state.generateTypeInfos
+
   const editor = window.activeTextEditor;
   if (!editor) {
     return;
